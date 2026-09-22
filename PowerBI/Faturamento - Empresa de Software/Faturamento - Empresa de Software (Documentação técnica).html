@@ -1,0 +1,1448 @@
+
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+            <meta charset="utf-8">
+            <title>Documentação Power BI - Faturamento - Empresa de Software</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+            <style>
+        :root {
+            --bg: #FFFFFF;
+            --fg: #2C3E50;
+            --fg-soft: #6C7A89;
+            --primary: #003D6B;
+            --secondary: #006DAA;
+            --accent: #006DAA;
+            --light: #D6E8F5;
+            --border: #EAECEE;
+            --row-alt: #F8F9F9;
+            --code-bg: #F2F4F4;
+            --code-fg: #C0392B;
+            --card-bg: #FFFFFF;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        [data-theme="dark"] {
+            --bg: #0F172A;
+            --fg: #E2E8F0;
+            --fg-soft: #94A3B8;
+            --primary: #60A5FA;
+            --secondary: #93C5FD;
+            --accent: #BFDBFE;
+            --light: #1E293B;
+            --border: #334155;
+            --row-alt: #1A2434;
+            --code-bg: #1E293B;
+            --code-fg: #FCA5A5;
+            --card-bg: #1A2434;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+        html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body { font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+               color: var(--fg); background: var(--bg);
+               line-height: 1.6; padding: 20px 40px; font-size: 10.5pt;
+               transition: background 0.2s ease, color 0.2s ease; }
+        h1, h2, h3, h4, h5 { color: var(--primary); font-weight: 600;
+                              margin-top: 1.5em; margin-bottom: 0.5em;
+                              page-break-after: avoid; }
+        h1 { border-bottom: 2px solid var(--secondary); padding-bottom: 0.3em; font-size: 24pt; }
+        h2 { border-bottom: 1px solid var(--border); padding-bottom: 0.3em; font-size: 18pt; }
+        h3 { font-size: 14pt; color: var(--secondary); }
+        h4 { font-size: 12pt; color: var(--primary); margin-top: 1.2em; }
+        h5 { font-size: 11.5pt; color: var(--primary); margin-top: 1.4em; margin-bottom: 0.4em;
+             padding: 6px 12px; background: var(--light); border-left: 4px solid var(--secondary);
+             border-radius: 0 4px 4px 0; font-family: 'Consolas', 'Courier New', monospace; }
+
+        /* ---------- icones SVG inline ---------- */
+        .icon { width: 1em; height: 1em; vertical-align: -0.15em;
+                margin-right: 0.4em; display: inline-block; flex-shrink: 0; }
+        h1 > .icon, h2 > .icon, h3 > .icon, h4 > .icon { opacity: 0.78; }
+        td .icon, th .icon { margin-right: 0.25em; }
+
+        /* ---------- tabelas ---------- */
+        table { border-collapse: collapse; width: 100%; margin: 1.5em 0;
+                font-size: 9.5pt; box-shadow: var(--card-shadow);
+                table-layout: auto; word-break: break-word; background: var(--card-bg); }
+        th { background-color: var(--secondary); color: white;
+             padding: 10px 12px; text-align: left; font-weight: 600; }
+        td { border-bottom: 1px solid var(--border); padding: 10px 12px; }
+        tr:nth-child(even) { background-color: var(--row-alt); }
+        tr { page-break-inside: avoid; }
+        /* sticky header em tabelas grandes (>= 10 linhas): so na TELA.
+           Em @media print sticky vira `relative` e o thead aparece flutuando
+           no meio da pagina (bug conhecido em paged media). Tratado abaixo. */
+        @media screen {
+            .table-large thead th { position: sticky; top: 0; z-index: 2;
+                                     box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+        }
+
+        /* ---------- code ---------- */
+        code { font-family: 'Consolas', 'Courier New', monospace;
+               background-color: var(--code-bg); padding: 2px 5px;
+               border-radius: 4px; font-size: 9pt; color: var(--code-fg);
+               word-break: break-all; }
+        pre { position: relative; margin: 1.2em 0; }
+        pre code { display: block; padding: 15px 15px 15px 15px;
+                   border-left: 4px solid var(--secondary); overflow-x: auto;
+                   line-height: 1.5; white-space: pre; word-wrap: normal;
+                   border-radius: 0 6px 6px 0; tab-size: 4; }
+        /* No print, scroll horizontal nao existe. Quebra linhas longas
+           preservando indentacao (pre-wrap) e quebra qualquer token (URLs,
+           strings DAX/M coladas) com overflow-wrap pra garantir que nada
+           seja cortado pela margem direita da pagina. */
+        @media print {
+            pre code { white-space: pre-wrap !important;
+                       word-wrap: break-word !important;
+                       overflow-wrap: anywhere !important;
+                       overflow-x: visible !important;
+                       font-size: 8pt !important;
+                       line-height: 1.35 !important; }
+            pre code .line-num { font-size: 7.5pt !important; }
+        }
+        pre code .line-num { display: inline-block; width: 28px;
+                              padding-right: 14px;
+                              color: var(--fg-soft); opacity: 0.55;
+                              text-align: right; user-select: none;
+                              border-right: 1px solid var(--border);
+                              margin-right: 12px; font-size: 8.5pt; }
+        pre code.hljs { border-left: 4px solid var(--secondary); border-radius: 0 6px 6px 0; }
+        :not(pre) > code { background-color: var(--code-bg) !important;
+                           color: var(--code-fg) !important;
+                           padding: 2px 5px; border-radius: 4px; font-size: 9pt; }
+        blockquote { border-left: 4px solid var(--secondary); background: var(--light);
+                     padding: 12px 16px; margin: 1.5em 0; color: var(--fg);
+                     border-radius: 0 4px 4px 0; }
+        hr { border: 0; height: 1px; background: var(--border); margin: 2em 0; }
+        a { color: var(--secondary); }
+
+        /* ---------- mermaid ---------- */
+        .language-mermaid { white-space: pre-wrap; word-wrap: break-word; font-family: 'Consolas', monospace; }
+        .mermaid { display: flex; justify-content: center; margin: 2em 0; page-break-inside: avoid; }
+        .mermaid .fact-table rect { fill: var(--secondary); stroke: var(--primary); stroke-width: 1.5px; }
+        .mermaid .fact-table text { fill: #FFFFFF; font-weight: 600; }
+
+        /* ---------- capa ---------- */
+        .cover-page { display: flex; flex-direction: column; justify-content: center;
+                      align-items: center; min-height: 92vh; text-align: center;
+                      padding: 2em 0; position: relative; }
+        .cover-page h1.cover-title { font-size: 32pt; border-bottom: 3px solid var(--secondary);
+                                      padding-bottom: 0.4em; margin-bottom: 0.4em;
+                                      color: var(--primary); }
+        .cover-subtitle { font-size: 13pt; color: var(--fg-soft); font-weight: 400;
+                          letter-spacing: 0.08em; text-transform: uppercase;
+                          margin-bottom: 2em; }
+        .cover-logo { margin-bottom: 1.5em; }
+        .cover-project { font-size: 24pt; color: var(--primary); font-weight: 600;
+                         margin: 0.5em 0; }
+        .cover-meta { margin-top: 3em; padding: 18px 28px; border: 1px solid var(--border);
+                      border-radius: 8px; background: var(--card-bg);
+                      box-shadow: var(--card-shadow); min-width: 360px; }
+        .cover-meta-row { display: flex; justify-content: space-between;
+                          padding: 6px 0; font-size: 10pt; gap: 30px; }
+        .cover-meta-row + .cover-meta-row { border-top: 1px dashed var(--border); }
+        .cover-meta-label { color: var(--fg-soft); font-weight: 500; }
+        .cover-meta-value { color: var(--fg); font-weight: 600; }
+        .cover-badge { position: absolute; bottom: 20px; left: 50%;
+                       transform: translateX(-50%); font-size: 8.5pt;
+                       color: var(--fg-soft); letter-spacing: 0.04em; }
+        .page-break { height: 0; margin: 0; padding: 0; border: none; }
+
+        /* ---------- sumario executivo ---------- */
+        .exec-summary { background: linear-gradient(135deg, var(--light), var(--card-bg));
+                        border: 1px solid var(--border); border-radius: 10px;
+                        padding: 24px 28px; margin: 1.5em 0; box-shadow: var(--card-shadow); }
+        .exec-summary h3 { margin-top: 0; border: 0; color: var(--primary); }
+        .exec-summary p { margin: 0.4em 0; }
+        .exec-highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                           gap: 12px; margin-top: 1em; }
+        .exec-highlight { background: var(--card-bg); border-radius: 6px;
+                          padding: 12px 14px; border-left: 3px solid var(--secondary); }
+        .exec-highlight .label { font-size: 8.5pt; color: var(--fg-soft);
+                                  text-transform: uppercase; letter-spacing: 0.06em; }
+        .exec-highlight .value { font-size: 13pt; color: var(--primary); font-weight: 600; }
+
+        /* ---------- cards (Visao Geral) ---------- */
+        .overview-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                           gap: 16px; margin: 1.5em 0; }
+        .card { background: var(--card-bg); border: 1px solid var(--border);
+                border-radius: 10px; padding: 18px 16px;
+                box-shadow: var(--card-shadow); text-align: center;
+                page-break-inside: avoid; transition: transform 0.15s ease; }
+        .card-icon { color: var(--secondary); font-size: 22pt;
+                     display: inline-flex; align-items: center; justify-content: center;
+                     width: 44px; height: 44px; background: var(--light);
+                     border-radius: 50%; margin: 0 auto 10px; }
+        .card-icon .icon { width: 1em; height: 1em; margin: 0; }
+        .card-value { font-size: 22pt; font-weight: 700; color: var(--primary);
+                       line-height: 1; }
+        .card-label { font-size: 9pt; color: var(--fg-soft); margin-top: 6px;
+                       text-transform: uppercase; letter-spacing: 0.06em; }
+
+        /* ---------- estatisticas por medida (chips) ---------- */
+        .measure-stats { display: flex; flex-wrap: wrap; gap: 8px;
+                          margin: 0.6em 0 1em 0; }
+        .measure-stats span { background: var(--light); color: var(--fg-soft);
+                               padding: 3px 10px; border-radius: 12px;
+                               font-size: 8.5pt; font-weight: 500;
+                               letter-spacing: 0.02em; }
+        .measure-stats span strong { color: var(--primary); font-weight: 700;
+                                      margin-right: 3px; }
+
+        /* ---------- toggle tema (rodape fixo no canto) ---------- */
+        .theme-toggle { position: fixed; bottom: 20px; right: 20px;
+                         width: 40px; height: 40px; border-radius: 50%;
+                         background: var(--card-bg); border: 1px solid var(--border);
+                         box-shadow: var(--card-shadow); cursor: pointer;
+                         display: flex; align-items: center; justify-content: center;
+                         color: var(--primary); z-index: 100;
+                         transition: transform 0.15s ease, background 0.2s ease; }
+        .theme-toggle:hover { transform: scale(1.08); }
+        .theme-toggle .icon { width: 18px; height: 18px; margin: 0; }
+        @media print { .theme-toggle { display: none !important; } }
+
+        /* ---------- print ---------- */
+        @media print {
+            @page {
+                size: A4;
+                margin: 2.2cm 2cm 2cm 2cm;
+                @top-right {
+                    content: "Documentação Power BI - Faturamento - Empresa de Software";
+                    font-family: 'Inter', sans-serif;
+                    font-size: 8.5pt;
+                    color: #888;
+                }
+                @bottom-right {
+                    content: "Pagina " counter(page) " de " counter(pages);
+                    font-family: 'Inter', sans-serif;
+                    font-size: 8.5pt;
+                    color: #888;
+                }
+                @bottom-left {
+                    content: "Documentação Power BI";
+                    font-family: 'Inter', sans-serif;
+                    font-size: 8.5pt;
+                    color: #888;
+                }
+            }
+            @page :first { @top-right { content: ""; } @bottom-right { content: ""; } @bottom-left { content: ""; } }
+            body { padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+                   background: white !important; color: black !important; }
+            p, li { orphans: 3; widows: 3; }
+            pre { page-break-inside: avoid; }
+            a[href^="http"]:after { content: " (" attr(href) ")"; font-size: 80%; color: #555; }
+            a { color: inherit; text-decoration: none; }
+            .page-break { page-break-after: always; break-after: page; }
+            .theme-toggle { display: none; }
+            /* Tabelas grandes precisam quebrar entre paginas. `display: table-header-group`
+               faz o navegador repetir o thead no topo de cada pagina automaticamente.
+               Sem isso, sticky vira posicionamento "flutuante" no PDF e o header aparece
+               sobreposto a linhas no meio do documento. */
+            table { page-break-inside: auto; }
+            thead { display: table-header-group; }
+            tfoot { display: table-footer-group; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+            .table-large thead th { position: static !important;
+                                     box-shadow: none !important; }
+        }
+        </style>
+            <script>
+                // Aplica tema salvo o mais cedo possivel (antes do render) para
+                // evitar "flash" branco quando o usuario tem dark mode ativo.
+                (function() {
+                    try {
+                        const saved = localStorage.getItem('bidoc-theme');
+                        if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+                    } catch (e) {}
+                })();
+            </script>
+            <script type="module">
+                import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+                mermaid.initialize({ startOnLoad: true, theme: 'default' });
+                const factTables = new Set([]);
+
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.querySelectorAll("code.language-mermaid").forEach(el => {
+                        const div = document.createElement("div");
+                        div.className = "mermaid";
+                        div.textContent = el.textContent;
+                        if (el.parentNode.tagName === 'PRE') {
+                            el.parentNode.replaceWith(div);
+                        }
+                    });
+
+                    document.querySelectorAll("code.language-dax").forEach(el => {
+                        el.classList.remove("language-dax");
+                        el.classList.add("language-sql");
+                    });
+                    document.querySelectorAll("code.language-powerquery").forEach(el => {
+                        el.classList.remove("language-powerquery");
+                        el.classList.add("language-powershell");
+                    });
+
+                    hljs.highlightAll();
+
+                    // Numeracao de linha em blocos de codigo. Pula mermaid e blocos curtos
+                    // (< 3 linhas). Roda apos highlight para nao bagunca o tokenizer.
+                    document.querySelectorAll("pre > code").forEach(block => {
+                        if (block.classList.contains("language-mermaid")) return;
+                        const html = block.innerHTML;
+                        const lines = html.split(/\r?\n/);
+                        while (lines.length > 1 && lines[lines.length - 1].trim() === "") lines.pop();
+                        if (lines.length < 3) return;
+                        const pad = String(lines.length).length;
+                        const numbered = lines.map((line, i) => {
+                            const num = String(i + 1).padStart(pad, ' ');
+                            return `<span class="line-num">${num}</span>${line}`;
+                        }).join("\n");
+                        block.innerHTML = numbered;
+                    });
+
+                    document.querySelectorAll("table").forEach(t => {
+                        const rows = t.querySelectorAll("tbody tr").length;
+                        if (rows >= 10) t.classList.add("table-large");
+                    });
+
+                    if (factTables.size > 0) {
+                        const applyFactHighlight = () => {
+                            const entities = document.querySelectorAll(".mermaid svg g.entity");
+                            if (!entities.length) return false;
+                            entities.forEach(entity => {
+                                const label = entity.querySelector("text");
+                                if (!label) return;
+                                const name = (label.textContent || "").trim();
+                                if (factTables.has(name)) entity.classList.add("fact-table");
+                            });
+                            return true;
+                        };
+                        const waitForMermaid = (attempt = 0) => {
+                            if (applyFactHighlight()) return;
+                            if (attempt < 30) setTimeout(() => waitForMermaid(attempt + 1), 150);
+                        };
+                        waitForMermaid();
+                    }
+
+                    const btn = document.getElementById('theme-toggle');
+                    if (btn) {
+                        const svgMoon = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
+                        const svgSun = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg>`;
+                        const updateBtn = () => {
+                            const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+                            btn.innerHTML = dark ? svgSun : svgMoon;
+                            btn.setAttribute('aria-label', dark ? 'Mudar para tema claro' : 'Mudar para tema escuro');
+                        };
+                        updateBtn();
+                        btn.addEventListener('click', () => {
+                            const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+                            if (dark) {
+                                document.documentElement.removeAttribute('data-theme');
+                                try { localStorage.setItem('bidoc-theme', 'light'); } catch (e) {}
+                            } else {
+                                document.documentElement.setAttribute('data-theme', 'dark');
+                                try { localStorage.setItem('bidoc-theme', 'dark'); } catch (e) {}
+                            }
+                            updateBtn();
+                        });
+                    }
+                });
+            </script>
+        </head>
+        <body>
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Alternar tema"></button>
+            <div class="cover-page" style="border-top: 6px solid #003D6B; background: linear-gradient(180deg, #D6E8F5, #ffffff 42%);">
+<h1 class="cover-title" style="color: #003D6B; border-bottom: 3px solid #006DAA;">Documentação Power BI</h1>
+<p class="cover-subtitle">Modelo Semântico e Camada de Relatório</p>
+<p class="cover-project" style="color: #003D6B;">Faturamento - Empresa de Software</p>
+<div class="cover-meta">
+<div class="cover-meta-row"><span class="cover-meta-label">Data de criação</span><span class="cover-meta-value">01/06/2026</span></div>
+<div class="cover-meta-row"><span class="cover-meta-label">Última atualização do projeto</span><span class="cover-meta-value">01/06/2026 22:00</span></div>
+<div class="cover-meta-row"><span class="cover-meta-label">Tabelas no modelo</span><span class="cover-meta-value">3</span></div>
+<div class="cover-meta-row"><span class="cover-meta-label">Medidas DAX</span><span class="cover-meta-value">6</span></div>
+</div>
+<p class="cover-badge">Gerado por BI Doc Maker v0.9.5</p>
+</div>
+
+<div class="page-break"></div>
+
+<h2 id="indice"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="8" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="8" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg> Índice</h2>
+<ol class="toc-list">
+<li><a href="#sumario-executivo">Sumário Executivo</a></li>
+<li><a href="#visao-geral">Visão Geral</a></li>
+<li><a href="#dicionario-de-dados-e-termos">Dicionário de Dados e Termos</a></li>
+<li><a href="#paginas-do-relatorio">Páginas do Relatório</a></li>
+<li><a href="#modelo-de-dados">Modelo de Dados</a></li>
+<li><a href="#resumo-das-tabelas">Resumo das Tabelas</a></li>
+<li><a href="#tabelas-do-modelo">Detalhamento das Tabelas</a>
+<div style="margin-left: 1em; margin-top: 0.3em;">
+a) <a href="#1-clientes">Clientes</a><br/>
+b) <a href="#2-medidas">Medidas</a><br/>
+c) <a href="#3-sistemas">Sistemas</a><br/>
+</div>
+</li>
+<li><a href="#recursos-de-imagem">Recursos de Imagem</a></li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2 id="sumario-executivo">Sumário Executivo</h2>
+<p><em>Visão geral do conteúdo deste documento, pensada para leitura rápida por gestores e stakeholders não-técnicos.</em></p>
+<div class="exec-summary">
+<h3>O que este modelo entrega</h3>
+<p>Conjunto de 3 tabelas e 6 medidas DAX, apresentadas em 1 página(s) de relatório.</p>
+<div class="exec-highlights">
+<div class="exec-highlight"><div class="label">Tabelas</div><div class="value">3</div></div>
+<div class="exec-highlight"><div class="label">Medidas DAX</div><div class="value">6</div></div>
+<div class="exec-highlight"><div class="label">Relacionamentos</div><div class="value">1</div></div>
+<div class="exec-highlight"><div class="label">Páginas</div><div class="value">1</div></div>
+<div class="exec-highlight"><div class="label">Atualização do projeto</div><div class="value" style="font-size:11pt">01/06/2026 22:00</div></div>
+</div>
+<h3 style="margin-top:1.5em">Escopo da documentação</h3>
+<p>Este documento abrange o modelo semântico (tabelas, colunas, medidas, relacionamentos, regras Power Query), o glossário de negócio inferido dos metadados, o glossário das funções DAX utilizadas e o catálogo de páginas do relatório com seus filtros.</p>
+</div>
+
+<div class="page-break"></div>
+
+<h2 id="visao-geral"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="3,17 9,11 13,15 21,7"/><polyline points="14,7 21,7 21,14"/></svg> Visão Geral</h2>
+<div class="overview-cards">
+<div class="card"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="6" width="14" height="12" rx="1"/><rect x="8" y="3" width="14" height="12" rx="1" fill="#ffffff"/><line x1="2" y1="11" x2="16" y2="11"/><line x1="9" y1="6" x2="9" y2="18"/></svg></div><div class="card-value">3</div><div class="card-label">Tabelas</div></div>
+<div class="card"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="6,4 18,4 12,12 18,20 6,20"/></svg></div><div class="card-value">6</div><div class="card-label">Medidas</div></div>
+<div class="card"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="4" height="16" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/></svg></div><div class="card-value">10</div><div class="card-label">Colunas</div></div>
+<div class="card"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/><line x1="9" y1="16" x2="9.01" y2="16"/><line x1="12" y1="16" x2="12.01" y2="16"/><line x1="15" y1="16" x2="15.01" y2="16"/></svg></div><div class="card-value">0</div><div class="card-label">Calculadas</div></div>
+<div class="card"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg></div><div class="card-value">1</div><div class="card-label">Relacionamentos</div></div>
+<div class="card"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="14,3 14,9 20,9"/></svg></div><div class="card-value">1</div><div class="card-label">Páginas</div></div>
+</div>
+
+<hr />
+<h2 id="dicionario-de-dados-e-termos"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5a2 2 0 0 1 2-2h5v16H6a2 2 0 0 0-2 2V5z"/><path d="M20 5a2 2 0 0 0-2-2h-5v16h5a2 2 0 0 1 2 2V5z"/></svg> Dicionário de Dados e Termos</h2>
+<blockquote>
+<p>Leitura offline inferida a partir dos metadados do PBIP. O dicionário não usa dados reais das tabelas e deve ser validado com a área de negócio.</p>
+</blockquote>
+<h3 id="termos-de-negocio">Termos de Negócio</h3>
+<p><em>Conceitos do domínio — indicadores, entidades, períodos e atributos que falam a linguagem da área usuária.</em></p>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th style="text-align: right;">Ocorrências</th>
+<th>Categoria</th>
+<th>Onde aparece</th>
+<th>Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clientes</td>
+<td style="text-align: right;">14</td>
+<td>Indicador</td>
+<td>Tabela, Coluna, Power Query M, Medida, DAX</td>
+<td>Tabela: Clientes - Nome da tabela; Coluna: Clientes.Nome do Cliente - Nome da coluna; Coluna: Clientes.Nome do Cliente - Coluna de origem</td>
+</tr>
+<tr>
+<td>Sistema</td>
+<td style="text-align: right;">11</td>
+<td>Indicador</td>
+<td>Coluna, Power Query M, Medida, DAX, Tabela</td>
+<td>Coluna: Clientes.Código do Sistema - Nome da coluna; Coluna: Clientes.Código do Sistema - Coluna de origem; Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Anual</td>
+<td style="text-align: right;">10</td>
+<td>Indicador</td>
+<td>Coluna, Power Query M, Medida, DAX</td>
+<td>Coluna: Clientes.Valor Anual Pago - Nome da coluna; Coluna: Clientes.Valor Anual Pago - Coluna de origem; Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Faturamento</td>
+<td style="text-align: right;">6</td>
+<td>Indicador</td>
+<td>Projeto, Medida, DAX</td>
+<td>Projeto: Faturamento - Empresa de Software; Medida: Medidas.Faturamento Anual - Nome da medida; Medida: Medidas.Faturamento por sistema - Nome da medida</td>
+</tr>
+<tr>
+<td>Código Sistema</td>
+<td style="text-align: right;">7</td>
+<td>Identificador</td>
+<td>Coluna, Power Query M, DAX, Relacionamento</td>
+<td>Coluna: Clientes.Código do Sistema - Nome da coluna; Coluna: Clientes.Código do Sistema - Coluna de origem; Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Nome Cliente</td>
+<td style="text-align: right;">7</td>
+<td>Atributo</td>
+<td>Coluna, Power Query M, DAX</td>
+<td>Coluna: Clientes.Nome do Cliente - Nome da coluna; Coluna: Clientes.Nome do Cliente - Coluna de origem; Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Valor Anual Pago</td>
+<td style="text-align: right;">6</td>
+<td>Indicador</td>
+<td>Coluna, Power Query M, DAX</td>
+<td>Coluna: Clientes.Valor Anual Pago - Nome da coluna; Coluna: Clientes.Valor Anual Pago - Coluna de origem; Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Faturamento Anual</td>
+<td style="text-align: right;">4</td>
+<td>Indicador</td>
+<td>Medida, DAX</td>
+<td>Medida: Medidas.Faturamento Anual - Nome da medida; DAX: Medidas.Faturamento por sistema - Referência usada na medida DAX; DAX: Medidas.TopN Clientes - Referência usada na medida DAX</td>
+</tr>
+<tr>
+<td>Qtde Clientes</td>
+<td style="text-align: right;">2</td>
+<td>Indicador</td>
+<td>Medida, DAX</td>
+<td>Medida: Medidas.Qtde Clientes - Nome da medida; DAX: Medidas.Ticket médio - Referência usada na medida DAX</td>
+</tr>
+<tr>
+<td>Top Clientes</td>
+<td style="text-align: right;">2</td>
+<td>Indicador</td>
+<td>Medida, DAX</td>
+<td>Medida: Medidas.TopN Clientes - Nome da medida; DAX: Medidas.Rank - Referência usada na medida DAX</td>
+</tr>
+<tr>
+<td>Estado</td>
+<td style="text-align: right;">5</td>
+<td>Atributo</td>
+<td>Coluna, Power Query M</td>
+<td>Coluna: Clientes.Estado - Nome da coluna; Coluna: Clientes.Estado - Coluna de origem; Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Segmento</td>
+<td style="text-align: right;">5</td>
+<td>Atributo</td>
+<td>Coluna, Power Query M</td>
+<td>Coluna: Clientes.Segmento - Nome da coluna; Coluna: Clientes.Segmento - Coluna de origem; Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Faturamento Sistema</td>
+<td style="text-align: right;">1</td>
+<td>Indicador</td>
+<td>Medida</td>
+<td>Medida: Medidas.Faturamento por sistema - Nome da medida</td>
+</tr>
+<tr>
+<td>Ticket Médio</td>
+<td style="text-align: right;">1</td>
+<td>Indicador</td>
+<td>Medida</td>
+<td>Medida: Medidas.Ticket médio - Nome da medida</td>
+</tr>
+<tr>
+<td>Região</td>
+<td style="text-align: right;">4</td>
+<td>Atributo</td>
+<td>Coluna, Power Query M</td>
+<td>Coluna: Clientes.Região - Nome da coluna; Coluna: Clientes.Região - Coluna de origem; Power Query M: Clientes - Regra Power Query</td>
+</tr>
+<tr>
+<td>Índice</td>
+<td style="text-align: right;">8</td>
+<td>Indicador</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query; Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td style="text-align: right;">3</td>
+<td>Atributo</td>
+<td>Coluna, Power Query M</td>
+<td>Coluna: Sistemas.Descrição - Nome da coluna; Coluna: Sistemas.Descrição - Coluna de origem; Power Query M: Sistemas - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Rank</td>
+<td style="text-align: right;">1</td>
+<td>Indicador</td>
+<td>Medida</td>
+<td>Medida: Medidas.Rank - Nome da medida</td>
+</tr>
+<tr>
+<td>Visão Geral</td>
+<td style="text-align: right;">1</td>
+<td>Página/Visual</td>
+<td>Página</td>
+<td>Página: Visão Geral - Nome da página</td>
+</tr>
+<tr>
+<td>Medidas</td>
+<td style="text-align: right;">1</td>
+<td>Entidade</td>
+<td>Tabela</td>
+<td>Tabela: Medidas - Nome da tabela</td>
+</tr>
+<tr>
+<td>Índice Codigo</td>
+<td style="text-align: right;">2</td>
+<td>Identificador</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query</td>
+</tr>
+<tr>
+<td>Faturamento Empresa Software</td>
+<td style="text-align: right;">1</td>
+<td>Indicador</td>
+<td>Projeto</td>
+<td>Projeto: Faturamento - Empresa de Software</td>
+</tr>
+</tbody>
+</table>
+<h3 id="termos-tecnicos">Termos Técnicos</h3>
+<p><em>Vocabulário interno de transformação — regras Power Query, padrões de etapas e identificadores estruturais.</em></p>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th style="text-align: right;">Ocorrências</th>
+<th>Categoria</th>
+<th>Onde aparece</th>
+<th>Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transformação Personalizada</td>
+<td style="text-align: right;">4</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Etapa Power Query; Power Query M: Clientes - Regra Power Query</td>
+</tr>
+<tr>
+<td>Sudeste</td>
+<td style="text-align: right;">4</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Tipagem</td>
+<td style="text-align: right;">4</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Etapa Power Query; Power Query M: Medidas - Etapa Power Query; Power Query M: Sistemas - Etapa Power Query</td>
+</tr>
+<tr>
+<td>Transform</td>
+<td style="text-align: right;">4</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query; Power Query M: Medidas - Regra Power Query; Power Query M: Sistemas - Regra Power Query</td>
+</tr>
+<tr>
+<td>Fonte</td>
+<td style="text-align: right;">3</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Etapa Power Query; Power Query M: Medidas - Etapa Power Query; Power Query M: Sistemas - Etapa Power Query</td>
+</tr>
+<tr>
+<td>Nordeste</td>
+<td style="text-align: right;">3</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Objeto Origem</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query; Power Query M: Sistemas - Regra Power Query</td>
+</tr>
+<tr>
+<td>Promote Headers</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query; Power Query M: Sistemas - Regra Power Query</td>
+</tr>
+<tr>
+<td>Transformações Estrutura</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Etapa Power Query</td>
+</tr>
+<tr>
+<td>Cabeçalhos</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Etapa Power Query; Power Query M: Sistemas - Etapa Power Query</td>
+</tr>
+<tr>
+<td>Calculada</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Etapa Power Query; Power Query M: Clientes - Regra Power Query</td>
+</tr>
+<tr>
+<td>Excel</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query; Power Query M: Sistemas - Regra Power Query</td>
+</tr>
+<tr>
+<td>Navegação</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Etapa Power Query; Power Query M: Sistemas - Etapa Power Query</td>
+</tr>
+<tr>
+<td>Renomeação</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Etapa Power Query</td>
+</tr>
+<tr>
+<td>Reorder</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query</td>
+</tr>
+<tr>
+<td>Workbook</td>
+<td style="text-align: right;">2</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query; Power Query M: Sistemas - Regra Power Query</td>
+</tr>
+<tr>
+<td>Centro Oeste</td>
+<td style="text-align: right;">1</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Coluna Calculada Região</td>
+<td style="text-align: right;">1</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query</td>
+</tr>
+<tr>
+<td>Remoção Colunas</td>
+<td style="text-align: right;">1</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Etapa Power Query</td>
+</tr>
+<tr>
+<td>Column1</td>
+<td style="text-align: right;">1</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Sistemas - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Column2</td>
+<td style="text-align: right;">1</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Sistemas - Texto encontrado no código M</td>
+</tr>
+<tr>
+<td>Document</td>
+<td style="text-align: right;">1</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Medidas - Regra Power Query</td>
+</tr>
+<tr>
+<td>Remove</td>
+<td style="text-align: right;">1</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Regra Power Query</td>
+</tr>
+<tr>
+<td>Sul</td>
+<td style="text-align: right;">1</td>
+<td>Regra Técnica</td>
+<td>Power Query M</td>
+<td>Power Query M: Clientes - Texto encontrado no código M</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="glossario-dax"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="12"/><line x1="15" y1="9" x2="15" y2="12"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="15" x2="9" y2="18"/><line x1="15" y1="15" x2="15" y2="18"/></svg> Glossário DAX</h2>
+<blockquote>
+<p>Funções DAX usadas em medidas, colunas calculadas e tabelas deste projeto. Cada medida individual abaixo lista apenas os nomes das funções — a descrição completa fica aqui.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Função</th>
+<th>Categoria</th>
+<th>Descrição</th>
+<th>Leitura de negócio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ALL</code></td>
+<td>Contexto e filtros</td>
+<td>Remove filtros de tabela ou coluna.</td>
+<td>calcula indicador ignorando filtros selecionados.</td>
+</tr>
+<tr>
+<td><code>ALLSELECTED</code></td>
+<td>Contexto e filtros</td>
+<td>Considera filtros externos selecionados.</td>
+<td>calcula respeitando seleção visual mais ampla.</td>
+</tr>
+<tr>
+<td><code>CALCULATE</code></td>
+<td>Contexto e filtros</td>
+<td>Avalia expressão em contexto de filtro modificado.</td>
+<td>recalcula a métrica aplicando regras específicas de filtro.</td>
+</tr>
+<tr>
+<td><code>KEEPFILTERS</code></td>
+<td>Contexto e filtros</td>
+<td>Preserva filtros existentes ao adicionar novos.</td>
+<td>refina o contexto sem sobrescrever seleções.</td>
+</tr>
+<tr>
+<td><code>COUNTROWS</code></td>
+<td>Agregações e iteradores</td>
+<td>Conta linhas de tabela.</td>
+<td>mede quantidade de registros no contexto.</td>
+</tr>
+<tr>
+<td><code>SUM</code></td>
+<td>Agregações e iteradores</td>
+<td>Soma uma coluna numérica.</td>
+<td>calcula total direto de um campo.</td>
+</tr>
+<tr>
+<td><code>BLANK</code></td>
+<td>Lógica e tratamento</td>
+<td>Retorna valor vazio.</td>
+<td>omite resultado quando a regra não deve exibir valor.</td>
+</tr>
+<tr>
+<td><code>SWITCH</code></td>
+<td>Lógica e tratamento</td>
+<td>Seleciona resultado entre múltiplos casos.</td>
+<td>modela classificação ou regra com vários cenários.</td>
+</tr>
+<tr>
+<td><code>ISINSCOPE</code></td>
+<td>Funções tabulares</td>
+<td>Verifica se coluna está no nível atual de hierarquia.</td>
+<td>ajusta cálculo conforme granularidade visível no relatório.</td>
+</tr>
+<tr>
+<td><code>RANKX</code></td>
+<td>Funções tabulares</td>
+<td>Calcula ranking sobre tabela.</td>
+<td>classifica entidades por métrica.</td>
+</tr>
+<tr>
+<td><code>TOPN</code></td>
+<td>Funções tabulares</td>
+<td>Retorna os N maiores/menores registros.</td>
+<td>seleciona principais itens conforme ordenação.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="paginas-do-relatorio"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="14,3 14,9 20,9"/></svg> Páginas do Relatório</h2>
+<p><strong>Total de páginas: 1</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Nome</th>
+<th>Tipo</th>
+<th>Dimensões</th>
+<th>Filtros</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Visão Geral</td>
+<td>Padrão</td>
+<td>1280 x 720</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="modelo-de-dados"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="6" height="6" rx="1"/><rect x="15" y="4" width="6" height="6" rx="1"/><rect x="9" y="14" width="6" height="6" rx="1"/><line x1="6" y1="10" x2="11" y2="14"/><line x1="18" y1="10" x2="13" y2="14"/></svg> Modelo de Dados</h2>
+<h3 id="diagrama-de-relacionamentos-er">Diagrama de Relacionamentos (ER)</h3>
+<pre><code class="language-mermaid">erDiagram
+    Clientes {
+        int64 Codigo
+        string Nome_do_Cliente
+        string Estado
+        string Segmento
+        string C_digo_do_Sistema
+        double Valor_Anual_Pago
+        string Regi_o
+    }
+    Medidas {
+        string Coluna_1
+    }
+    Sistemas {
+        string C_digo
+        string Descri__o
+    }
+    Clientes }o--|| Sistemas : &quot;Código do Sistema&quot;
+</code></pre>
+<p><strong>Como ler o diagrama:</strong></p>
+<ul>
+<li><code>}|</code> ou <code>}o</code> = lado <strong>"muitos"</strong> da relação (vários registros)</li>
+<li><code>||</code> = lado <strong>"um"</strong> da relação (registro único)</li>
+<li><code>}|--||</code> = <strong>Filtro Bidirecional</strong> — ambas as tabelas se filtram mutuamente</li>
+<li><code>}o--||</code> = <strong>Filtro Único</strong> — só a dimensão filtra a fato (direção padrão)</li>
+</ul>
+<h3 id="lista-de-relacionamentos"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg> Lista de Relacionamentos</h3>
+<p><em>Total: 1 relacionamentos</em></p>
+<table>
+<thead>
+<tr>
+<th>Origem</th>
+<th>→</th>
+<th>Destino</th>
+<th>Bidirecional</th>
+<th>Ativo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clientes.Código do Sistema</td>
+<td>→</td>
+<td>Sistemas.Código</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<hr />
+<h2 id="resumo-das-tabelas"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="6" y1="20" x2="6" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="14"/><line x1="3" y1="20" x2="21" y2="20"/></svg> Resumo das Tabelas</h2>
+<p><em>Visão geral de 3 tabelas no modelo</em></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tabela</th>
+<th>Colunas</th>
+<th>Medidas</th>
+<th>Colunas Calc.</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Clientes</strong></td>
+<td>7</td>
+<td>0</td>
+<td>0</td>
+<td>Importação</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Medidas</strong></td>
+<td>1</td>
+<td>6</td>
+<td>0</td>
+<td>Importação</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Sistemas</strong></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>Importação</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Totais</strong>: 10 colunas | 6 medidas | 0 colunas calculadas</p>
+<hr />
+<h2 id="tabelas-do-modelo"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="6" width="14" height="12" rx="1"/><rect x="8" y="3" width="14" height="12" rx="1" fill="#ffffff"/><line x1="2" y1="11" x2="16" y2="11"/><line x1="9" y1="6" x2="9" y2="18"/></svg> Tabelas do Modelo</h2>
+<p><em>Total de tabelas documentadas: 3</em></p>
+<h3 id="1-clientes">1. Clientes</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Status</th>
+<th style="text-align: center;">Atualização</th>
+<th style="text-align: center;">Colunas</th>
+<th style="text-align: center;">Medidas</th>
+<th style="text-align: center;">Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> Visível</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="5,12 10,17 19,7"/></svg> Sim</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12"/><polyline points="7,10 12,15 17,10"/><path d="M5 21h14"/></svg> Importação</td>
+</tr>
+</tbody>
+</table>
+<h4 id="colunas"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="4" height="16" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/></svg> Colunas</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nome</th>
+<th style="text-align: center;">Tipo</th>
+<th style="text-align: center;">Sumarização</th>
+<th style="text-align: center;">Oculta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Codigo</code></td>
+<td style="text-align: center;"><code>int64</code></td>
+<td style="text-align: center;">sum</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Nome do Cliente</code></td>
+<td style="text-align: center;"><code>string</code></td>
+<td style="text-align: center;">none</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Estado</code></td>
+<td style="text-align: center;"><code>string</code></td>
+<td style="text-align: center;">none</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Segmento</code></td>
+<td style="text-align: center;"><code>string</code></td>
+<td style="text-align: center;">none</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Código do Sistema</code></td>
+<td style="text-align: center;"><code>string</code></td>
+<td style="text-align: center;">none</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Valor Anual Pago</code></td>
+<td style="text-align: center;"><code>double</code></td>
+<td style="text-align: center;">sum</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Região</code></td>
+<td style="text-align: center;"><code>string</code></td>
+<td style="text-align: center;">none</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+</tbody>
+</table>
+<h4 id="regra-de-negocio-inferida">Regra de Negócio Inferida</h4>
+<blockquote>
+<p>Leitura offline inferida a partir das etapas do Power Query M. Para compreensão completa da regra, consulte o código M original exibido abaixo.</p>
+</blockquote>
+<p><strong>Esta tabela aplica</strong>: 1 fonte, 1 navegação, 1 ajuste de cabeçalho, 1 tipagem, 2 transformações personalizadas, 2 transformações de estrutura, 2 renomeações, 1 remoção de colunas, 1 coluna calculada.</p>
+<p><strong>Regras de Negócio e Filtros — Power Query</strong></p>
+<table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Regra / Filtro</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fonte</td>
+<td><code>Excel.Workbook</code></td>
+<td>Etapa <code>Fonte</code> conecta ou lê dados de arquivo Excel.</td>
+</tr>
+<tr>
+<td>Navegação</td>
+<td>Objeto da origem</td>
+<td>Etapa <code>Clientes_Sheet</code> navega para um objeto específico dentro da origem de dados.</td>
+</tr>
+<tr>
+<td>Cabeçalhos</td>
+<td><code>Table.PromoteHeaders</code></td>
+<td>Etapa <code>Cabeçalhos Promovidos</code> promove a primeira linha para cabeçalhos.</td>
+</tr>
+<tr>
+<td>Tipagem</td>
+<td><code>Table.TransformColumnTypes</code></td>
+<td>Etapa <code>Tipo Alterado</code> ajusta os tipos de dados das colunas: Nome do Cliente, Estado, Segmento, Código do Sistema, Valor Anual Pago.</td>
+</tr>
+<tr>
+<td>Transformação Personalizada</td>
+<td>Transformação personalizada</td>
+<td>Etapa <code>Índice Adicionado</code> não foi classificada automaticamente. Consulte o código M original para detalhe completo.</td>
+</tr>
+<tr>
+<td>Transformações de estrutura</td>
+<td><code>Table.ReorderColumns</code></td>
+<td>Etapa <code>Colunas Reordenadas</code> organiza a estrutura final das colunas.</td>
+</tr>
+<tr>
+<td>Renomeação</td>
+<td><code>Índice -&gt; Codigo</code></td>
+<td>Etapa <code>Colunas Renomeadas</code> padroniza nomes de colunas.</td>
+</tr>
+<tr>
+<td>Remoção de Colunas</td>
+<td><code>Table.RemoveColumns</code></td>
+<td>Etapa <code>Colunas Removidas</code> remove as colunas: Codigo.</td>
+</tr>
+<tr>
+<td>Transformação Personalizada</td>
+<td>Transformação personalizada</td>
+<td>Etapa <code>Índice Adicionado1</code> não foi classificada automaticamente. Consulte o código M original para detalhe completo.</td>
+</tr>
+<tr>
+<td>Transformações de estrutura</td>
+<td><code>Table.ReorderColumns</code></td>
+<td>Etapa <code>Colunas Reordenadas1</code> organiza a estrutura final das colunas.</td>
+</tr>
+<tr>
+<td>Renomeação</td>
+<td><code>Índice -&gt; Codigo</code></td>
+<td>Etapa <code>Colunas Renomeadas1</code> padroniza nomes de colunas.</td>
+</tr>
+<tr>
+<td>Coluna Calculada</td>
+<td>Coluna calculada: <code>Região</code></td>
+<td>Etapa <code>Coluna Condicional Adicionada</code> cria uma coluna calculada a partir de regra definida em M.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="fonte-de-dados"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg> Fonte de Dados</h4>
+<p><strong>Modo</strong>: <code>import</code></p>
+<p><strong>Código fonte (Power Query M)</strong></p>
+<pre><code class="language-powerquery">let
+                    Fonte = Excel.Workbook(File.Contents(&quot;D:\USUARIO\Desktop\PowerBI\Projetos\Empresa_software\Base_Dados_Software_300_Clientes.xlsx&quot;), null, true),
+                    Clientes_Sheet = Fonte{[Item=&quot;Clientes&quot;,Kind=&quot;Sheet&quot;]}[Data],
+                    #&quot;Cabeçalhos Promovidos&quot; = Table.PromoteHeaders(Clientes_Sheet, [PromoteAllScalars=true]),
+                    #&quot;Tipo Alterado&quot; = Table.TransformColumnTypes(#&quot;Cabeçalhos Promovidos&quot;,{{&quot;Nome do Cliente&quot;, type text}, {&quot;Estado&quot;, type text}, {&quot;Segmento&quot;, type text}, {&quot;Código do Sistema&quot;, type text}, {&quot;Valor Anual Pago&quot;, type number}}),
+                    #&quot;Índice Adicionado&quot; = Table.AddIndexColumn(#&quot;Tipo Alterado&quot;, &quot;Índice&quot;, 0, 1, Int64.Type),
+                    #&quot;Colunas Reordenadas&quot; = Table.ReorderColumns(#&quot;Índice Adicionado&quot;,{&quot;Índice&quot;, &quot;Nome do Cliente&quot;, &quot;Estado&quot;, &quot;Segmento&quot;, &quot;Código do Sistema&quot;, &quot;Valor Anual Pago&quot;}),
+                    #&quot;Colunas Renomeadas&quot; = Table.RenameColumns(#&quot;Colunas Reordenadas&quot;,{{&quot;Índice&quot;, &quot;Codigo&quot;}}),
+                    #&quot;Colunas Removidas&quot; = Table.RemoveColumns(#&quot;Colunas Renomeadas&quot;,{&quot;Codigo&quot;}),
+                    #&quot;Índice Adicionado1&quot; = Table.AddIndexColumn(#&quot;Colunas Removidas&quot;, &quot;Índice&quot;, 1, 1, Int64.Type),
+                    #&quot;Colunas Reordenadas1&quot; = Table.ReorderColumns(#&quot;Índice Adicionado1&quot;,{&quot;Índice&quot;, &quot;Nome do Cliente&quot;, &quot;Estado&quot;, &quot;Segmento&quot;, &quot;Código do Sistema&quot;, &quot;Valor Anual Pago&quot;}),
+                    #&quot;Colunas Renomeadas1&quot; = Table.RenameColumns(#&quot;Colunas Reordenadas1&quot;,{{&quot;Índice&quot;, &quot;Codigo&quot;}}),
+                    #&quot;Coluna Condicional Adicionada&quot; = Table.AddColumn(#&quot;Colunas Renomeadas1&quot;, &quot;Região&quot;, each if [Estado] = &quot;SP&quot; then &quot;Sudeste&quot; else if [Estado] = &quot;RJ&quot; then &quot;Sudeste&quot; else if [Estado] = &quot;MG&quot; then &quot;Sudeste&quot; else if [Estado] = &quot;ES&quot; then &quot;Sudeste&quot; else if [Estado] = &quot;BA&quot; then &quot;Nordeste&quot; else if [Estado] = &quot;CE&quot; then &quot;Nordeste&quot; else if [Estado] = &quot;GO&quot; then &quot;Centro-Oeste&quot; else if [Estado] = &quot;PE&quot; then &quot;Nordeste&quot; else &quot;Sul&quot;)
+                in
+                    #&quot;Coluna Condicional Adicionada&quot;
+</code></pre>
+<hr />
+<h3 id="2-medidas">2. Medidas</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Status</th>
+<th style="text-align: center;">Atualização</th>
+<th style="text-align: center;">Colunas</th>
+<th style="text-align: center;">Medidas</th>
+<th style="text-align: center;">Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> Visível</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="5,12 10,17 19,7"/></svg> Sim</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12"/><polyline points="7,10 12,15 17,10"/><path d="M5 21h14"/></svg> Importação</td>
+</tr>
+</tbody>
+</table>
+<h4 id="colunas_1"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="4" height="16" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/></svg> Colunas</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nome</th>
+<th style="text-align: center;">Tipo</th>
+<th style="text-align: center;">Sumarização</th>
+<th style="text-align: center;">Oculta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Coluna 1</code></td>
+<td style="text-align: center;"><code>string</code></td>
+<td style="text-align: center;">none</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+</tbody>
+</table>
+<h4 id="medidas-resumo">Medidas (Resumo)</h4>
+<table>
+<thead>
+<tr>
+<th>Nome</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Faturamento Anual</td>
+<td>Moeda</td>
+</tr>
+<tr>
+<td>Faturamento por sistema</td>
+<td>Moeda</td>
+</tr>
+<tr>
+<td>TopN Clientes</td>
+<td>Numérico</td>
+</tr>
+<tr>
+<td>Rank</td>
+<td>Numérico</td>
+</tr>
+<tr>
+<td>Qtde Clientes</td>
+<td>Contagem</td>
+</tr>
+<tr>
+<td>Ticket médio</td>
+<td>Numérico</td>
+</tr>
+</tbody>
+</table>
+<h4 id="medidas-codigo-dax">Medidas - Código DAX</h4>
+<h5 id="faturamento-anual">Faturamento Anual</h5>
+<div class="measure-stats"><span><strong>1</strong> linhas DAX</span><span><strong>1</strong> função</span><span><strong>0</strong> dependências</span><span><strong>1</strong> tabela referenciada</span></div>
+
+<p><strong>Funções DAX usadas</strong></p>
+<ul>
+<li><strong>Agregações e iteradores</strong>: <code>SUM</code></li>
+</ul>
+<pre><code class="language-dax">SUM(Clientes[Valor Anual Pago])
+</code></pre>
+<h5 id="faturamento-por-sistema">Faturamento por sistema</h5>
+<div class="measure-stats"><span><strong>4</strong> linhas DAX</span><span><strong>1</strong> função</span><span><strong>1</strong> dependência</span><span><strong>1</strong> tabela referenciada</span></div>
+
+<p><strong>Funções DAX usadas</strong></p>
+<ul>
+<li><strong>Contexto e filtros</strong>: <code>CALCULATE</code></li>
+</ul>
+<p><strong>Medidas referenciadas</strong>: <code>[Faturamento Anual]</code></p>
+<pre><code class="language-dax">CALCULATE(
+                [Faturamento Anual],
+                Clientes[Código do Sistema] = &quot;ERP&quot;
+            )
+</code></pre>
+<h5 id="topn-clientes">TopN Clientes</h5>
+<div class="measure-stats"><span><strong>4</strong> linhas DAX</span><span><strong>4</strong> funções</span><span><strong>1</strong> dependência</span><span><strong>1</strong> tabela referenciada</span></div>
+
+<p><strong>Funções DAX usadas</strong></p>
+<ul>
+<li><strong>Contexto e filtros</strong>: <code>CALCULATE</code>, <code>ALL</code>, <code>KEEPFILTERS</code></li>
+<li><strong>Funções tabulares</strong>: <code>TOPN</code></li>
+</ul>
+<p><strong>Medidas referenciadas</strong>: <code>[Faturamento Anual]</code></p>
+<pre><code class="language-dax">CALCULATE(
+                [Faturamento Anual],
+                KEEPFILTERS(TOPN(5, ALL(Clientes[Nome do Cliente]),[Faturamento Anual]))
+            )
+</code></pre>
+<h5 id="rank">Rank</h5>
+<div class="measure-stats"><span><strong>6</strong> linhas DAX</span><span><strong>5</strong> funções</span><span><strong>1</strong> dependência</span><span><strong>1</strong> tabela referenciada</span></div>
+
+<p><strong>Funções DAX usadas</strong></p>
+<ul>
+<li><strong>Contexto e filtros</strong>: <code>ALLSELECTED</code></li>
+<li><strong>Lógica e tratamento</strong>: <code>SWITCH</code>, <code>BLANK</code>, <code>SWITCH(TRUE())</code></li>
+<li><strong>Funções tabulares</strong>: <code>ISINSCOPE</code>, <code>RANKX</code></li>
+</ul>
+<p><strong>Medidas referenciadas</strong>: <code>[TopN Clientes]</code></p>
+<pre><code class="language-dax">SWITCH(
+                TRUE(),
+                not(ISINSCOPE(Clientes[Nome do Cliente])), BLANK(),
+                [TopN Clientes] = BLANK(), BLANK(),
+                RANKX(ALLSELECTED(Clientes[Nome do Cliente]), [TopN Clientes],,DESC,Dense)
+            )
+</code></pre>
+<h5 id="qtde-clientes">Qtde Clientes</h5>
+<div class="measure-stats"><span><strong>1</strong> linhas DAX</span><span><strong>1</strong> função</span><span><strong>0</strong> dependências</span><span><strong>0</strong> tabelas referenciadas</span></div>
+
+<p><strong>Funções DAX usadas</strong></p>
+<ul>
+<li><strong>Agregações e iteradores</strong>: <code>COUNTROWS</code></li>
+</ul>
+<pre><code class="language-dax">COUNTROWS(Clientes)
+</code></pre>
+<h5 id="ticket-medio">Ticket médio</h5>
+<div class="measure-stats"><span><strong>1</strong> linhas DAX</span><span><strong>0</strong> funções</span><span><strong>2</strong> dependências</span><span><strong>0</strong> tabelas referenciadas</span></div>
+
+<p><strong>Medidas referenciadas</strong>: <code>[Faturamento Anual]</code>, <code>[Qtde Clientes]</code></p>
+<pre><code class="language-dax">[Faturamento Anual] / [Qtde Clientes]
+</code></pre>
+<h4 id="regra-de-negocio-inferida_1">Regra de Negócio Inferida</h4>
+<blockquote>
+<p>Leitura offline inferida a partir das etapas do Power Query M. Para compreensão completa da regra, consulte o código M original exibido abaixo.</p>
+</blockquote>
+<p><strong>Esta tabela aplica</strong>: 1 fonte, 1 tipagem.</p>
+<p><strong>Regras de Negócio e Filtros — Power Query</strong></p>
+<table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Regra / Filtro</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fonte</td>
+<td><code>Json.Document</code></td>
+<td>Etapa <code>Fonte</code> conecta ou lê dados de arquivo JSON.</td>
+</tr>
+<tr>
+<td>Tipagem</td>
+<td><code>Table.TransformColumnTypes</code></td>
+<td>Etapa <code>Tipo Alterado</code> ajusta os tipos de dados das colunas: Coluna 1.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="fonte-de-dados_1"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg> Fonte de Dados</h4>
+<p><strong>Modo</strong>: <code>import</code></p>
+<p><strong>Código fonte (Power Query M)</strong></p>
+<pre><code class="language-powerquery">let
+                    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(&quot;i44FAA==&quot;, BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#&quot;Coluna 1&quot; = _t]),
+                    #&quot;Tipo Alterado&quot; = Table.TransformColumnTypes(Fonte,{{&quot;Coluna 1&quot;, type text}})
+                in
+                    #&quot;Tipo Alterado&quot;
+</code></pre>
+<hr />
+<h3 id="3-sistemas">3. Sistemas</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Status</th>
+<th style="text-align: center;">Atualização</th>
+<th style="text-align: center;">Colunas</th>
+<th style="text-align: center;">Medidas</th>
+<th style="text-align: center;">Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> Visível</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="5,12 10,17 19,7"/></svg> Sim</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12"/><polyline points="7,10 12,15 17,10"/><path d="M5 21h14"/></svg> Importação</td>
+</tr>
+</tbody>
+</table>
+<h4 id="colunas_2"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="4" height="16" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/></svg> Colunas</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nome</th>
+<th style="text-align: center;">Tipo</th>
+<th style="text-align: center;">Sumarização</th>
+<th style="text-align: center;">Oculta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Código</code></td>
+<td style="text-align: center;"><code>string</code></td>
+<td style="text-align: center;">none</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Descrição</code></td>
+<td style="text-align: center;"><code>string</code></td>
+<td style="text-align: center;">none</td>
+<td style="text-align: center;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/></svg></td>
+</tr>
+</tbody>
+</table>
+<h4 id="regra-de-negocio-inferida_2">Regra de Negócio Inferida</h4>
+<blockquote>
+<p>Leitura offline inferida a partir das etapas do Power Query M. Para compreensão completa da regra, consulte o código M original exibido abaixo.</p>
+</blockquote>
+<p><strong>Esta tabela aplica</strong>: 1 fonte, 1 navegação, 2 tipagens, 1 ajuste de cabeçalho.</p>
+<p><strong>Regras de Negócio e Filtros — Power Query</strong></p>
+<table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Regra / Filtro</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fonte</td>
+<td><code>Excel.Workbook</code></td>
+<td>Etapa <code>Fonte</code> conecta ou lê dados de arquivo Excel.</td>
+</tr>
+<tr>
+<td>Navegação</td>
+<td>Objeto da origem</td>
+<td>Etapa <code>Sistemas_Sheet</code> navega para um objeto específico dentro da origem de dados.</td>
+</tr>
+<tr>
+<td>Tipagem</td>
+<td><code>Table.TransformColumnTypes</code></td>
+<td>Etapa <code>Tipo Alterado</code> ajusta os tipos de dados das colunas: Column1, Column2.</td>
+</tr>
+<tr>
+<td>Cabeçalhos</td>
+<td><code>Table.PromoteHeaders</code></td>
+<td>Etapa <code>Cabeçalhos Promovidos</code> promove a primeira linha para cabeçalhos.</td>
+</tr>
+<tr>
+<td>Tipagem</td>
+<td><code>Table.TransformColumnTypes</code></td>
+<td>Etapa <code>Tipo Alterado1</code> ajusta os tipos de dados das colunas: Código, Descrição.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="fonte-de-dados_2"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg> Fonte de Dados</h4>
+<p><strong>Modo</strong>: <code>import</code></p>
+<p><strong>Código fonte (Power Query M)</strong></p>
+<pre><code class="language-powerquery">let
+                    Fonte = Excel.Workbook(File.Contents(&quot;D:\USUARIO\Desktop\PowerBI\Projetos\Empresa_software\Base_Dados_Software_300_Clientes.xlsx&quot;), null, true),
+                    Sistemas_Sheet = Fonte{[Item=&quot;Sistemas&quot;,Kind=&quot;Sheet&quot;]}[Data],
+                    #&quot;Tipo Alterado&quot; = Table.TransformColumnTypes(Sistemas_Sheet,{{&quot;Column1&quot;, type text}, {&quot;Column2&quot;, type text}}),
+                    #&quot;Cabeçalhos Promovidos&quot; = Table.PromoteHeaders(#&quot;Tipo Alterado&quot;, [PromoteAllScalars=true]),
+                    #&quot;Tipo Alterado1&quot; = Table.TransformColumnTypes(#&quot;Cabeçalhos Promovidos&quot;,{{&quot;Código&quot;, type text}, {&quot;Descrição&quot;, type text}})
+                in
+                    #&quot;Tipo Alterado1&quot;
+</code></pre>
+<hr />
+<h2 id="parametros-e-expressoes-m"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14.7 6.3a4 4 0 0 0 5 5L21 13l-8 8a2 2 0 1 1-3-3l8-8 1.7-1.7z"/></svg> Parâmetros e Expressões M</h2>
+<p>Parâmetros e expressões compartilhadas declarados no nível do modelo. Parâmetros M (<code>IsParameterQuery=true</code>) podem ser editados sem alterar o código.</p>
+<h3 id="expressoes-compartilhadas"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h11a3 3 0 0 1 3 3v10a3 3 0 0 0 3 3"/><path d="M19 20H6a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2"/><line x1="8" y1="9" x2="14" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg> Expressões compartilhadas</h3>
+<h4 id="canais-de-venda">Canais de Venda</h4>
+<pre><code class="language-powerquery">let
+Fonte = Excel.Workbook(File.Contents(&quot;D:\USUARIO\Desktop\PowerBI\Projetos\Empresa_software\Base_Dados_Software_300_Clientes.xlsx&quot;), null, true),
+#&quot;Canais de Venda_Sheet&quot; = Fonte{[Item=&quot;Canais de Venda&quot;,Kind=&quot;Sheet&quot;]}[Data],
+#&quot;Cabeçalhos Promovidos&quot; = Table.PromoteHeaders(#&quot;Canais de Venda_Sheet&quot;, [PromoteAllScalars=true]),
+#&quot;Tipo Alterado&quot; = Table.TransformColumnTypes(#&quot;Cabeçalhos Promovidos&quot;,{{&quot;Código&quot;, Int64.Type}, {&quot;Nome do Canal&quot;, type text}})
+in
+#&quot;Tipo Alterado&quot;
+</code></pre>
+        </body>
+        </html>
+        
