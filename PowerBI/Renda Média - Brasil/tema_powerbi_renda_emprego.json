@@ -1,0 +1,95 @@
+{
+    "name": "Renda e Emprego - Contraste Elegante",
+    "dataColors": [
+        "#004E64",
+        "#3AB795",
+        "#FF6B6B",
+        "#2E2E2E",
+        "#FAFAFA"
+    ],
+    "background": "#FAFAFA",
+    "foreground": "#1A1A1A",
+    "tableAccent": "#004E64",
+    "visualStyles": {
+        "*": {
+            "*": {
+                "titleText": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#004E64"
+                            }
+                        }
+                    }
+                ],
+                "labels": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#1A1A1A"
+                            }
+                        }
+                    }
+                ],
+                "calloutValue": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#004E64"
+                            }
+                        }
+                    }
+                ],
+                "value": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#1A1A1A"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "card": {
+            "*": {
+                "title": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#FFFFFF"
+                            }
+                        }
+                    }
+                ],
+                "labels": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#FFFFFF"
+                            }
+                        }
+                    }
+                ],
+                "value": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#FFFFFF"
+                            }
+                        }
+                    }
+                ],
+                "background": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#2E2E2E"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
